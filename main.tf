@@ -5,15 +5,16 @@ resource "aws_ecs_cluster" "ecs-cluster" {
 data "aws_ssm_parameter" "ecs_ami_id" {
   name = "/aws/service/ecs/optimized-ami/amazon-linux/recommended/image_id"
 }
+
 data "template_file" "user_data" {
   template = "${file("${path.module}/templates/user_data.sh")}"
 
   vars {
-    ecs_config        = "${var.ecs_config}"
-    ecs_logging       = "${var.ecs_logging}"
-    cluster_name      = "${var.ecs_cluster}"
-    env_name          = "${var.environment}"
-    custom_userdata   = "${var.custom_userdata}"
+    ecs_config      = "${var.ecs_config}"
+    ecs_logging     = "${var.ecs_logging}"
+    cluster_name    = "${var.ecs_cluster}"
+    env_name        = "${var.environment}"
+    custom_userdata = "${var.custom_userdata}"
   }
 }
 
@@ -43,9 +44,9 @@ resource "aws_launch_configuration" "ecs-launch-configuration" {
 }
 
 resource "aws_autoscaling_group" "ecs-autoscaling-group" {
-  max_size          = "${var.max_instance_size}"
-  min_size          = "${var.min_instance_size}"
-  desired_capacity  = "${var.desired_capacity}"
+  max_size         = "${var.max_instance_size}"
+  min_size         = "${var.min_instance_size}"
+  desired_capacity = "${var.desired_capacity}"
 
   vpc_zone_identifier = ["${join(",", sort(var.private_subnets))}"]
 

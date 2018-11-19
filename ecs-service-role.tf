@@ -14,6 +14,10 @@ resource "aws_iam_role_policy_attachment" "ecs-service-role-attachment2" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
+resource "aws_iam_role_policy_attachment" "ecs-service-role-attachment3" {
+  role       = "${aws_iam_role.ecs-service-role.id}"
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+}
 
 data "aws_iam_policy_document" "ecs-service-policy" {
   statement {
@@ -21,7 +25,7 @@ data "aws_iam_policy_document" "ecs-service-policy" {
 
     principals {
       type        = "Service"
-      identifiers = ["ecs.amazonaws.com","ecs-tasks.amazonaws.com"]
+      identifiers = ["ecs.amazonaws.com", "ecs-tasks.amazonaws.com"]
     }
   }
 }
