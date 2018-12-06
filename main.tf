@@ -1,4 +1,4 @@
-resource "aws_ecs_cluster" "ecs-cluster" {
+resource "aws_ecs_cluster" "ecs_cluster" {
   name = "${var.ecs_cluster}"
 }
 
@@ -18,8 +18,8 @@ data "template_file" "user_data" {
   }
 }
 
-resource "aws_launch_configuration" "ecs-launch-configuration" {
-  name_prefix          = "backend-cluster-${var.environment}"
+resource "aws_launch_configuration" "ecs_launch_configuration" {
+  name_prefix          = "${var.ecs_cluster_type}-cluster-${var.environment}"
   image_id             = "${data.aws_ssm_parameter.ecs_ami_id.value}"
   instance_type        = "${var.instance_type}"
   iam_instance_profile = "${aws_iam_instance_profile.ecs-instance-profile.id}"
@@ -43,14 +43,14 @@ resource "aws_launch_configuration" "ecs-launch-configuration" {
   #   EOF
 }
 
-resource "aws_autoscaling_group" "ecs-autoscaling-group" {
+resource "aws_autoscaling_group" "ecs_autoscaling_group" {
   max_size         = "${var.max_instance_size}"
   min_size         = "${var.min_instance_size}"
   desired_capacity = "${var.desired_capacity}"
 
   vpc_zone_identifier = ["${join(",", sort(var.private_subnets))}"]
 
-  launch_configuration = "${aws_launch_configuration.ecs-launch-configuration.name}"
+  launch_configuration = "${aws_launch_configuration.ecs_launch_configuration.name}"
   health_check_type    = "ELB"
 
   tag {
@@ -66,18 +66,18 @@ resource "aws_autoscaling_group" "ecs-autoscaling-group" {
   }
 }
 
-resource "aws_autoscaling_policy" "ecs-cpu-policy-scaleup" {
-  name                   = "ecs-cpu-policy-scaleup"
+resource "aws_autoscaling_policy" "ecs_cpu_policy_scaleup" {
+  name                   = "ecs_cpu_policy_scaleup"
   scaling_adjustment     = 1
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 300
-  autoscaling_group_name = "${aws_autoscaling_group.ecs-autoscaling-group.name}"
+  autoscaling_group_name = "${aws_autoscaling_group.ecs_autoscaling_group.name}"
   policy_type            = "SimpleScaling"
 }
 
-resource "aws_cloudwatch_metric_alarm" "ecs-cpu-alarm-scaleup" {
-  alarm_name          = "ecs-cpu-alarm-scaleup"
-  alarm_description   = "ecs-cpu-alarm-scaleup"
+resource "aws_cloudwatch_metric_alarm" "ecs_cpu_alarm_scaleup" {
+  alarm_name          = "ecs_cpu_alarm_scaleup"
+  alarm_description   = "ecs_cpu_alarm_scaleup"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "2"
   metric_name         = "CPUUtilization"
@@ -87,26 +87,26 @@ resource "aws_cloudwatch_metric_alarm" "ecs-cpu-alarm-scaleup" {
   threshold           = "75"
 
   dimensions = {
-    "AutoScalingGroupName" = "${aws_autoscaling_group.ecs-autoscaling-group.name}"
+    "AutoScalingGroupName" = "${aws_autoscaling_group.ecs_autoscaling_group.name}"
   }
 
   actions_enabled = true
-  alarm_actions   = ["${aws_autoscaling_policy.ecs-cpu-policy-scaleup.arn}"]
+  alarm_actions   = ["${aws_autoscaling_policy.ecs_cpu_policy_scaleup.arn}"]
 }
 
 # scale down alarm
-resource "aws_autoscaling_policy" "ecs-cpu-policy-scaledown" {
-  name                   = "ecs-cpu-policy-scaledown"
-  autoscaling_group_name = "${aws_autoscaling_group.ecs-autoscaling-group.name}"
+resource "aws_autoscaling_policy" "ecs_cpu_policy_scaledown" {
+  name                   = "ecs_cpu_policy_scaledown"
+  autoscaling_group_name = "${aws_autoscaling_group.ecs_autoscaling_group.name}"
   adjustment_type        = "ChangeInCapacity"
   scaling_adjustment     = "-1"
   cooldown               = "300"
   policy_type            = "SimpleScaling"
 }
 
-resource "aws_cloudwatch_metric_alarm" "ecs-cpu-alarm-scaledown" {
-  alarm_name          = "ecs-cpu-alarm-scaledown"
-  alarm_description   = "ecs-cpu-alarm-scaledown"
+resource "aws_cloudwatch_metric_alarm" "ecs_cpu_alarm_scaledown" {
+  alarm_name          = "ecs_cpu_alarm_scaledown"
+  alarm_description   = "ecs_cpu_alarm_scaledown"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = "2"
   metric_name         = "CPUUtilization"
@@ -116,9 +116,9 @@ resource "aws_cloudwatch_metric_alarm" "ecs-cpu-alarm-scaledown" {
   threshold           = "10"
 
   dimensions = {
-    "AutoScalingGroupName" = "${aws_autoscaling_group.ecs-autoscaling-group.name}"
+    "AutoScalingGroupName" = "${aws_autoscaling_group.ecs_autoscaling_group.name}"
   }
 
   actions_enabled = true
-  alarm_actions   = ["${aws_autoscaling_policy.ecs-cpu-policy-scaledown.arn}"]
+  alarm_actions   = ["${aws_autoscaling_policy.ecs_cpu_policy_scaledown.arn}"]
 }
