@@ -26,7 +26,6 @@ data "aws_iam_policy_document" "ecs-service-policy" {
     principals {
       type        = "Service"
       identifiers = ["ecs.amazonaws.com", "ecs-tasks.amazonaws.com"]
-
     }
   }
 }
