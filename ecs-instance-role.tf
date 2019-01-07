@@ -26,7 +26,7 @@ resource "aws_iam_role_policy_attachment" "ecs_ec2_cloudwatch_role" {
 }
 
 resource "aws_iam_instance_profile" "ecs-instance-profile" {
-  name = "ecs-instance-profile"
+  name = "ecs-${var.environment}-instance-profile"
   path = "/"
   role = "${aws_iam_role.ecs-instance-role.id}"
 }
