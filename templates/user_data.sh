@@ -3,13 +3,9 @@
 
 # Install awslogs and the jq JSON parser
 yum install -y awslogs jq aws-cli 
-yum install -y jq
 
 region=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
-
-#yum install -y https://amazon-ssm-$region.s3.amazonaws.com/latest/linux_amd64/amazon-ssm-agent.rpm
-
-
+yum install -y https://amazon-ssm-$region.s3.amazonaws.com/latest/linux_amd64/amazon-ssm-agent.rpm
 
 # ECS config
 ${ecs_config}
@@ -61,7 +57,6 @@ datetime_format = %Y-%m-%dT%H:%M:%SZ
 EOF
 
 # Set the region to send CloudWatch Logs data to (the region where the container instance is located)
-region=$(curl 169.254.169.254/latest/meta-data/placement/availability-zone | sed s'/.$//')
 sed -i -e "s/region = us-east-1/region = $region/g" /etc/awslogs/awscli.conf
 
 # Set the ip address of the node 

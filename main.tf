@@ -68,7 +68,7 @@ resource "aws_autoscaling_group" "ecs-autoscaling-group" {
 }
 
 resource "aws_autoscaling_policy" "ecs-cpu-policy-scaleup" {
-  name                   = "ecs-cpu-policy-scaleup"
+  name                   = "ecs-${var.environment}-cpu-policy-scaleup"
   scaling_adjustment     = 1
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 300
@@ -77,8 +77,8 @@ resource "aws_autoscaling_policy" "ecs-cpu-policy-scaleup" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "ecs-cpu-alarm-scaleup" {
-  alarm_name          = "ecs-cpu-alarm-scaleup"
-  alarm_description   = "ecs-cpu-alarm-scaleup"
+  alarm_name          = "ecs-${var.environment}-cpu-alarm-scaleup"
+  alarm_description   = "ecs-${var.environment}-cpu-alarm-scaleup"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "2"
   metric_name         = "CPUUtilization"
@@ -97,7 +97,7 @@ resource "aws_cloudwatch_metric_alarm" "ecs-cpu-alarm-scaleup" {
 
 # scale down alarm
 resource "aws_autoscaling_policy" "ecs-cpu-policy-scaledown" {
-  name                   = "ecs-cpu-policy-scaledown"
+  name                   = "ecs-${var.environment}-cpu-policy-scaledown"
   autoscaling_group_name = "${aws_autoscaling_group.ecs-autoscaling-group.name}"
   adjustment_type        = "ChangeInCapacity"
   scaling_adjustment     = "-1"
@@ -106,8 +106,8 @@ resource "aws_autoscaling_policy" "ecs-cpu-policy-scaledown" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "ecs-cpu-alarm-scaledown" {
-  alarm_name          = "ecs-cpu-alarm-scaledown"
-  alarm_description   = "ecs-cpu-alarm-scaledown"
+  alarm_name          = "ecs-${var.environment}-cpu-alarm-scaledown"
+  alarm_description   = "ecs-${var.environment}-cpu-alarm-scaledown"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = "2"
   metric_name         = "CPUUtilization"
