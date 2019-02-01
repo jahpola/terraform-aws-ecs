@@ -3,8 +3,9 @@ resource "aws_ecs_cluster" "ecs-cluster" {
 }
 
 data "aws_ssm_parameter" "ecs_ami_id" {
-  name = "/aws/service/ecs/optimized-ami/amazon-linux/recommended/image_id"
+  name = "/aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id"
 }
+
 
 data "template_file" "user_data" {
   template = "${file("${path.module}/templates/user_data.sh")}"
