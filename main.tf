@@ -19,7 +19,7 @@ data "template_file" "user_data" {
 }
 
 resource "aws_launch_configuration" "ecs-launch-configuration" {
-  name_prefix          = "backend-cluster-${var.environment}"
+  name_prefix          = "backend-cluster-${var.environment}-"
   image_id             = "${data.aws_ssm_parameter.ecs_ami_id.value}"
   instance_type        = "${var.instance_type}"
   iam_instance_profile = "${aws_iam_instance_profile.ecs-instance-profile.id}"
@@ -63,6 +63,12 @@ resource "aws_autoscaling_group" "ecs-autoscaling-group" {
   tag {
     key                 = "Environment"
     value               = "${var.environment}"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "Name"
+    value               = "${var.ecs_cluster}"
     propagate_at_launch = true
   }
 }
