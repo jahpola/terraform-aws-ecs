@@ -42,3 +42,5 @@ variable "ecs_logging" {
   default     = "[\"json-file\",\"awslogs\"]"
   description = "Adding logging option to ECS that the Docker containers can use. It is possible to add fluentd as well"
 }
+
+variable "alert_topic" {}

@@ -99,7 +99,7 @@ resource "aws_cloudwatch_metric_alarm" "ecs-cpu-alarm-scaleup" {
   }
 
   actions_enabled = true
-  alarm_actions   = ["${aws_autoscaling_policy.ecs-cpu-policy-scaleup.arn}"]
+  alarm_actions   = ["${var.alert_topic}","${aws_autoscaling_policy.ecs-cpu-policy-scaleup.arn}"]
 }
 
 # scale down alarm
@@ -128,5 +128,5 @@ resource "aws_cloudwatch_metric_alarm" "ecs-cpu-alarm-scaledown" {
   }
 
   actions_enabled = true
-  alarm_actions   = ["${aws_autoscaling_policy.ecs-cpu-policy-scaledown.arn}"]
+  alarm_actions   = ["${var.alert_topic}","${aws_autoscaling_policy.ecs-cpu-policy-scaledown.arn}"]
 }
