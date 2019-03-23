@@ -1,5 +1,7 @@
 # AWS ECS module
 
+[![Sponsored](https://img.shields.io/badge/chilicorn-sponsored-brightgreen.svg)](http://spiceprogram.org/oss-sponsorship/)
+
 Yet another ECS Terraform module...
 
 ## User data 
@@ -36,3 +38,4 @@ module "ecs-cluster" {
   private_subnets   = "${data.terraform_remote_state.shared.private_subnets}"
 }
 ```
+
