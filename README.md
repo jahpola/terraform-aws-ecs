@@ -1,10 +1,13 @@
 # AWS ECS module
 
+[![Sponsored](https://img.shields.io/badge/chilicorn-sponsored-brightgreen.svg)](http://spiceprogram.org/oss-sponsorship/)
+
 Yet another ECS Terraform module... This module uses Amazon Linux 2 ECS ami for os. Also SSM agent has been installed for easier instance access. 
+
 
 ## User data
 
-See templates/user_data.sh. It should have sane setup. For custom userdata there is a variable custom_userdata. 
+See templates/user_data.sh. It should have sane basic setup. For custom userdata there is a variable custom_userdata. 
 
 ## Cloudwatch logging
 
@@ -36,3 +39,4 @@ module "ecs-cluster" {
   private_subnets   = "${data.terraform_remote_state.shared.private_subnets}"
 }
 ```
+
