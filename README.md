@@ -1,14 +1,14 @@
 # AWS ECS module
 
-Yet another ECS Terraform module...
+Yet another ECS Terraform module... This module uses Amazon Linux 2 ECS ami for os. Also SSM agent has been installed for easier instance access. 
 
-## User data 
+## User data
 
-TODO: 
-- create a user data script
-- add cloudwatch logging
-- add ssm agent
+See templates/user_data.sh. It should have sane setup. For custom userdata there is a variable custom_userdata. 
 
+## Cloudwatch logging
+
+Cloudwatch logs are used. The naming convention for logs is cluster_name/container_instance_id. This can be changed by editing the user_data.sh script as needed.
 
 ## How to use
 
